@@ -211,12 +211,11 @@
 	\end{columns}
 \end{frame}
 
-\begin{frame}{Example on the CiteSeer dataset}
-	\begin{figure}
-		\centering
-		%\includegraphics[width=0.8\linewidth]{images/CiteSeer_convergence.png}
-		\caption{Comparison between all samplers}
-	\end{figure}
+\begin{frame}{Hyperparameter optimization for GNNs}
+	We benchmarked 5 standard HPO methods on 9 GNN datasets. The results show that Bayesian optimization (BO) and Tree-structured Parzen Estimators (TPE) achieve the best performance, while Quasi Monte-Carlo (QMC) falls behind.
+	\adjustbox{width=\columnwidth}{%
+		\input{images/benchmark_ranks/benchmark_ranks.pgf}
+	}
 \end{frame}
 
 \begin{frame}{Meta-model results}
@@ -257,12 +256,12 @@
 	\end{columns}
 \end{frame}
 
-\begin{frame}{Example on the DBLP dataset}
-	\begin{figure}
-		\centering
-		%\includegraphics[width=0.8\linewidth]{images/DBLP_mean_per_trial.png}
-		\caption{Comparison with two other samplers}
-	\end{figure}
+\begin{frame}{The Cross-RF method for HPO on GNNs}
+	\begin{center}
+		\adjustbox{width=0.8\columnwidth}{%
+			\input{images/cross-rf_ranks/cross-rf_ranks.pgf}
+		}
+	\end{center}
 \end{frame}
 
 \begin{frame}{Next steps}
@@ -457,13 +456,6 @@
 			\end{tabularx}
 		}
 	\end{table}
-\end{frame}
-
-\begin{frame}{Hyperparameter optimization for GNNs}
-	We benchmarked 5 standard HPO methods on 9 GNN datasets. The results show that Bayesian optimization (BO) and Tree-structured Parzen Estimators (TPE) achieve the best performance, while Quasi Monte-Carlo (QMC) falls behind.
-	\adjustbox{width=\columnwidth}{%
-		\input{images/benchmark_ranks/benchmark_ranks.pgf}
-	}
 \end{frame}
 
 \begin{frame}{The Cross-RF method for HPO on graphs}
