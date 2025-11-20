@@ -1,0 +1,107 @@
+\documentclass[10pt, aspectratio=169]{beamer}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{polyglossia}
+
+\usepackage{adjustbox}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{appendixnumberbeamer}
+%\usepackage[backend=biber,style=iso-authoryear,sortlocale=en_US,autolang=other,bibencoding=UTF8]{biblatex}
+\usepackage{booktabs}
+\usepackage{color}
+\usepackage{csquotes}
+\usepackage{datetime}
+\usepackage{fontspec}
+\usepackage{graphics}
+\usepackage{hyperref}
+\usepackage{mathrsfs}
+\usepackage{microtype}
+\usepackage{pifont}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{todonotes}
+\usepackage{ulem}
+\usepackage{url}
+
+\setdefaultlanguage{english}
+\setotherlanguage{czech}
+\setmainfont{TeX Gyre Termes}
+\usetheme{Boadilla}
+\usecolortheme{crane}
+\setbeamertemplate{title page}[default][rounded=true,shadow=false]
+\setbeamertemplate{section in toc}[ball unnumbered]
+\setbeamertemplate{bibliography item}{}
+
+\hypersetup{%
+	pdfencoding=auto,
+	unicode=true,
+	citecolor=green,
+	filecolor=blue,
+	linkcolor=red,
+	urlcolor=blue
+}
+
+\makeatletter
+\newcommand*{\currentSection}{\@currentlabelname}
+\makeatother
+
+\def\mathdefault#1{#1}
+
+\input{notation}
+
+\title[RL for structured data]
+{%
+	Representation learning for structured data
+}
+
+\newdate{presentation}{25}{11}{2025}
+\date[October 2025]{FNSPE Doctoral days, \displaydate{presentation}}
+
+\author[Marek Dědič]
+{%
+	Marek~Dědič\inst{1, 2}
+}
+
+\institute[CTU in Prague, Cisco]
+{%
+	\inst{1} Czech Technical University in Prague \and
+	\inst{2} Cisco Systems, Inc.
+}
+
+\begin{document}
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Hyperparameter optimization for GNNs}
+	\begin{itemize}
+		\item Measure graph properties
+		\item Train GNN with different hyper-parameters
+		\item Train a meta-model predicting GNN performance from graph properties and hyper-parameters
+		\item Use the meta-model to suggest hyper-parameters for new graphs
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[width=0.6\linewidth]{images/hyperpar_tuning_single.pdf}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Hyperparameter optimization for GNNs}
+	We benchmarked 5 standard HPO methods on 9 GNN datasets. The results show that Bayesian optimization (BO) and Tree-structured Parzen Estimators (TPE) achieve the best performance, while Quasi Monte-Carlo (QMC) falls behind.
+	\adjustbox{width=\columnwidth}{%
+		\input{images/benchmark_ranks/benchmark_ranks.pgf}
+	}
+\end{frame}
+
+\begin{frame}{The Cross-RF method for HPO on graphs}
+	We propose a HPO method using a metamodel \( \mathcal{M}_\rho : \mathfield{R}^d \times \boldsymbol\Lambda \to \mathfield{R} \) that takes as input the properties of a graph dataset \( \delta \left( \mathcal{D} \right) \) and a hyperparameter configuration \( \lambda \), and outputs an estimate of a performance metric \( \rho \). This gives us the following HPO procedure:
+	\begin{equation*}
+		\tau \left( \mathcal{D}, \mathscr{F}, \tilde{\Lambda}, \rho \right) = \argmax_{\lambda \in \tilde{\Lambda}} \mathcal{M}_\rho \left( \delta \left( \mathcal{D} \right), \lambda \right)
+	\end{equation*}
+	We show this method to outperform all of the above methods on the 9 graph datasets by a slight margin.
+\end{frame}
+
+\end{document}
