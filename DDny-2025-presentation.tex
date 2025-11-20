@@ -58,9 +58,9 @@
 
 \input{notation}
 
-\title[RL for structured data]
+\title[HPO on for GNNs]
 {%
-	Representation learning for structured data
+	Benchmarking and Transfer Learning for Hyperparameter Optimization of Graph Neural Networks
 }
 
 \newdate{presentation}{25}{11}{2025}
@@ -116,19 +116,71 @@
 \begin{frame}{Hyper-parameter optimization}
 	\textbf{Goals \& contributions}:
 	\begin{itemize}
-		\item Evaluate standard HPO algorithms for GNNs
-		\item Evaluate a Cross-RF HPO algorithm specifically for GNNs\footnote{Building on previous work \cite{prochazka_which_2023}}
+		\item Systematic HPO Benchmark on GNNs
+		\item Meta-Learning for Hyperparameter Transfer\footnote{Building on previous work \cite{prochazka_which_2023}}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Evaluated standard algorithms}
 	\begin{itemize}
-		\item Grid-search
-		\item Random-search
-		\item Gaussian-process-based optimization
+		\item Grid search
+		\item Random search
+		\item Bayesian optimization
+		\item Sobol Quasi-Monte Carlo
 		\item Tree-structured Parzen Estimator
-		\item Quasi-Monte Carlo
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{Experiment setup}
+	\begin{itemize}
+		\item 9 standard datasets (34 nodes -- 169k nodes)
+		\item GraphSAGE model with 8 hyper-parameters
+		\item 10 repeated iterations for each configuration
+		\item HPO early-stopping based on wall-clock time \& improvement
+		\item Used a random forrest regressor as the meta-model
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Benchmark results}
+	\begin{columns}[t,onlytextwidth]
+		\begin{column}{0.45\textwidth}
+			\begin{itemize}
+				\item SMBO methods (BO and TPE) outperform other methods across all datasets. Between BO and TPE there is no clear winner.
+				\item Simple methods like random search and grid search remain solid choices for HPO as they usually trail behind SMBO methods by only a small margin.
+				\item Sobol QMC consistently ranks worse than SMBO methods.
+			\end{itemize}
+		\end{column}
+
+		\begin{column}{0.52\textwidth}
+			\centering
+			\scriptsize
+			\begin{table}
+				\centering
+				\begin{tabular}{lccccc}
+					\toprule
+					\textbf{Dataset} & \textbf{Random}    & \textbf{Grid} & \textbf{BO}        & \textbf{TPE}       & \textbf{QMC}       \\
+					\midrule
+					Cora             & 0.8560             & 0.8491        & \textbf{0.8747}    & \underline{0.8659} & 0.8351             \\
+					CiteSeer         & 0.7146             & 0.7046        & \underline{0.7172} & \textbf{0.7236}    & 0.7089             \\
+					Squirrel         & \underline{0.3659} & 0.3605        & 0.3544             & \textbf{0.3755}    & 0.3549             \\
+					PubMed           & 0.8515             & 0.8457        & \textbf{0.8825}    & \underline{0.8643} & 0.8596             \\
+					CoraFull         & 0.6211             & 0.6371        & \underline{0.6450} & \textbf{0.6555}    & 0.6385             \\
+					DBLP             & 0.8051             & 0.7996        & \textbf{0.8118}    & 0.8085             & \underline{0.8088} \\
+					Computers        & 0.6973             & 0.5999        & \textbf{0.8945}    & \underline{0.8047} & 0.7428             \\
+					Flickr           & 0.0864             & 0.0961        & \textbf{0.1908}    & \underline{0.1460} & 0.1069             \\
+					ArXiv            & 0.3950             & 0.3796        & \underline{0.3987} & \textbf{0.4098}    & 0.3955             \\
+					\bottomrule
+				\end{tabular}
+				\caption{Final F1 scores for each HPO method and for each dataset, averaged over 10 independent runs. The best method is \textbf{bold} and the second best is \underline{underlined}.}
+			\end{table}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Benchmark results -- ranks}
+	\adjustbox{width=\columnwidth}{%
+		\input{images/benchmark_ranks/benchmark_ranks.pgf}
+	}
 \end{frame}
 
 \begin{frame}{Cross-RF approach}
@@ -163,59 +215,8 @@
 
 \begin{frame}{Experiment setup}
 	\begin{itemize}
-		\item 10 standard datasets (34 nodes -- 169k nodes)
-		\item GraphSAGE model with 8 hyper-parameters
-		\item 10 repeated iterations for each configuration
-		\item HPO early-stopping based on wall-clock time \& improvement
 		\item Used a random forrest regressor as the meta-model
 	\end{itemize}
-\end{frame}
-
-
-\begin{frame}{Benchmark results}
-	\begin{columns}[t,onlytextwidth]
-		\begin{column}{0.45\textwidth}
-			\vspace{1cm}
-			\begin{itemize}
-				\item Bayesian methods\,(GP \& TPE) confirmed their advantage
-				\item Surprisingly, QMC scored the lowest on 6 out of 10 datasets
-			\end{itemize}
-		\end{column}
-
-		\begin{column}{0.55\textwidth}
-			\centering
-			\scriptsize
-			\begin{table}
-				\centering
-				\begin{adjustbox}{max width=\linewidth}
-					\begin{tabular}{lrrrrr}
-						\toprule
-						\textbf{Dataset} & \textbf{random} & \textbf{gp} & \textbf{tpe} & \textbf{grid} & \textbf{qmc} \\
-						\midrule
-						ArXiv        & 0.4261 & 0.4335 & \textbf{0.4354} & 0.4251 & 0.4244 \\
-						CiteSeer     & 0.7341 & 0.7380 & \textbf{0.7485} & 0.7341 & 0.7375 \\
-						Computers    & 0.9099 & 0.9112 & \textbf{0.9123} & 0.9109 & 0.9088 \\
-						Cora         & 0.8817 & \textbf{0.8892} & 0.8879 & 0.8811 & 0.8786 \\
-						CoraFull     & 0.6638 & 0.6664 & \textbf{0.6691} & 0.6637 & 0.6625 \\
-						DBLP         & 0.8187 & \textbf{0.8209} & 0.8194 & 0.8175 & 0.8209 \\
-						Flickr       & 0.1987 & \textbf{0.2142} & 0.2057 & 0.2059 & 0.1885 \\
-						KarateClub   & 0.8688 & \textbf{0.9748} & 0.9534 & 0.9510 & 0.8497 \\
-						PubMed       & 0.8841 & 0.8900 & 0.8900 & 0.8892 & \textbf{0.8907} \\
-						Squirrel     & \textbf{0.4037} & 0.4013 & 0.3972 & 0.4004 & 0.3904 \\
-						\bottomrule
-					\end{tabular}
-				\end{adjustbox}
-				\caption{Mean final F1 per algorithm and dataset.}
-			\end{table}
-		\end{column}
-	\end{columns}
-\end{frame}
-
-\begin{frame}{Hyperparameter optimization for GNNs}
-	We benchmarked 5 standard HPO methods on 9 GNN datasets. The results show that Bayesian optimization (BO) and Tree-structured Parzen Estimators (TPE) achieve the best performance, while Quasi Monte-Carlo (QMC) falls behind.
-	\adjustbox{width=\columnwidth}{%
-		\input{images/benchmark_ranks/benchmark_ranks.pgf}
-	}
 \end{frame}
 
 \begin{frame}{Meta-model results}
@@ -377,7 +378,7 @@
 		\centering
 		\scriptsize
 		\renewcommand{\arraystretch}{0.70}
-		\resizebox{0.5\linewidth}{!}{%
+		\resizebox{0.8\linewidth}{!}{%
 			\begin{tabularx}{\textwidth}{p{3.7cm} c c c X}
 				\toprule
 				\makecell[l]{\textbf{Graph Dataset}\\\textbf{Property}}
