@@ -83,7 +83,7 @@
 	\titlepage
 \end{frame}
 
-\begin{frame}{Parameters \& hyper-parameters}
+\begin{frame}{Parameters \& hyperparameters}
 	\begin{itemize}
 		\item Learners have parameters and hyperparameters
 		\item Parameters optimized automatically
@@ -93,7 +93,7 @@
 	\includegraphics[width=0.5\linewidth]{images/HPO.png}\footcite{kaiku_hyperparameter_2023}
 \end{frame}
 
-\begin{frame}{GNN hyper-parameter setups}
+\begin{frame}{GNN hyperparameter setups}
 	\centering
 	\only<1>{\includestandalone[width=\linewidth, page = 1]{images/hyperparameter-setups/hyperparameter-setups}}
 	\only<2>{\includestandalone[width=\linewidth, page = 2]{images/hyperparameter-setups/hyperparameter-setups}}
@@ -134,7 +134,7 @@
 \begin{frame}{Experiment setup}
 	\begin{itemize}
 		\item 9 standard datasets (34 nodes -- 169k nodes)
-		\item GraphSAGE model with 8 hyper-parameters
+		\item GraphSAGE model with 8 hyperparameters
 		\item 10 repeated iterations for each configuration
 		\item HPO early-stopping based on wall-clock time \& improvement
 		\item Used a random forrest regressor as the meta-model
@@ -188,8 +188,8 @@
 
 \begin{frame}{Cross-RF approach}
 	\begin{itemize}
-		\item A \textbf{meta-model}: Predict model performance from its hyper-parameters and dataset properties.
-		\item Use for HPO -- selecting the next hyper-parameter configuration \( \hat{\lambda} \):
+		\item A \textbf{meta-model}: Predict model performance from its hyperparameters and dataset properties.
+		\item Use for HPO -- selecting the next hyperparameter configuration \( \hat{\lambda} \):
 			\[ \hat{\lambda} = \argmax_{\lambda \in \tilde{\Lambda}} \left( \textrm{meta-model} \left( \lambda \right) \right) \]
 		\item Meta-model is cheap \rightarrow \, \( \argmax \) is feasible.
 		\item Meta-model can be \textbf{pre-trained} on other similar datasets.
@@ -267,20 +267,26 @@
 	Ranks-over-time of Cross-RF and reference methods over the progress of the optimization, aggreagated over 10 independent runs for each of 9 datasets.
 \end{frame}
 
-\begin{frame}{Next steps}
+\begin{frame}{Future work}
+	Immediate next steps:
 	\begin{itemize}
-		\item More performance metrics
-		\item Try different meta-model architectures
-		\item Try to optimize accross GNN architectures
-		\item Training on synthetic graphs
-		\item Incorporate as surrogate model for Bayesian HPO
+		\item Including a broader range of GNN architectures
+		\item Considering other performance metrics
+		\item Comparing to newer HPO methods
+	\end{itemize}
+
+	Longer-term directions:
+	\begin{itemize}
+		\item Pre-training the metamodel on sysnthetic datasets generated from known graph models
+		\item Using a different metamodel architecture which is better suited to continuous search spaces
+		\item Incorporating the metamodel as a surrogate model within an SMBO framework
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Conclusion}
 	\begin{itemize}
 		\item Evaluated standard HPO algorithms for GNNs
-		\item Shown the Cross-RF hyper-parameter optimization algorithm for GNNs to be comparable to SoTA
+		\item Shown the metamodel hyperparameter optimization algorithm for GNNs to beat standard methods
 		\item Implemented as a standard Optuna sampler
 		\item More interesting research to come
 	\end{itemize}
